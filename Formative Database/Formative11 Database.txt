@@ -1,0 +1,100 @@
+create database staging;
+use staging;
+create table productClientA(
+	id int primary key,
+	name varchar(30),
+	description varchar(40),
+	artNumber int,
+	price int,
+	stock int,
+	deleted varchar(10),
+	brandName varchar(20));
+
+create table productClientB(
+	id int primary key,
+	nama varchar(30),
+	deskripsi varchar(40),
+	nomorArtikel int,
+	harga int,
+	persediaanBarang int,
+	dihapus varchar(10),
+	namaMerek varchar(20));
+
+create database production;
+use production;
+create table product(
+	id int,
+	name varchar(30),
+	description varchar(40),
+	artNumber int,
+	price int,
+	stock int,
+	isDeleted varchar(10),
+	brand varchar(20));
+
+create table brand(
+	id int primary key,
+	name varchar(20));
+
+=================================================================================
+
+insert into productClientA values
+	(1,'Samsung A52','Smartphone',1,4975000,30,'tidak','SAMSUNG'),
+	(2,'Samsung A03S','Smartphone',2,1999000,10,'ya','SAMSUNG'),
+	(3,'Samsung A72','Smartphone',3,5700000,10,'tidak','SAMSUNG'),
+	(4,'OPPO A54','Smartphone',4,2599000,20,'tidak','OPPO'),
+	(5,'OPPO Reno 6','Smartphone',5,4899000,20,'tidak','OPPO'),
+	(6,'Redmi Book 15','Laptop',6,7888000,20,'tidak','XIAOMI'),
+	(7,'Mipad 5','Tablet',7,5399000,20,'ya','XIAOMI'),
+	(8,'Vivo X60 Pro','Smartphone',8,9399000,20,'tidak','VIVO'),
+	(9,'Samsung A52','Smartphone',9,4975000,20,'tidak','SAMSUNG'),
+	(10,'Samsung A32','Smartphone',10,3975000,20,'ya','SAMSUNG');
+
+
+insert into productClientB values
+	(1,'Milo','Produk Susu',1,30000,30,'tidak','Nestle'),
+	(2,'Dancow','Produk Susu',2,80000,50,'tidak','Nestle'),
+	(3,'Indomie','Mie',3,40000,100,'tidak','Indofood'),
+	(4,'Ketchup','Saus',4,30000,20,'ya','DelMonte'),
+	(5,'Bango','Kecap',5,40000,20,'20','Unilever'),
+	(6,'Pepsodent','Pasta Gigi',6,25000,50,'tidak','Unilever'),
+	(7,'Masker Medis','Masker',7,35000,20,'tidak','Gea medical'),
+	(8,'Vivo X60 Pro','Smartphone',8,9399000,5,'ya','VIVO'),
+	(9,'Samsung A52','Smartphone',9,4975000,4,'tidak','SAMSUNG'),
+	(10,'Samsung A52','Smartphone',10,4975000,7,'tidak','SAMSUNG');
+
+ insert production.product
+    	select*from staging.productClientA;
+
+ insert production.product
+    	select*from staging.productClientB;
+
+insert into brand values
+	(1,'SAMSUNG'),
+	(2,'OPPO'),
+	(3,'XIAOMI'),
+	(4,'VIVO'),s
+	(5,'NESTLE'),
+	(6,'INDOFOOD'),
+	(7,'DELMONTE'),
+	(8,'UNILEVER'),
+	(9,'GEA MEDICAL');
+
+
+select brand.id
+	from brand
+	right join product on brand.name=product.brand;
+
+update product set product.brandId=(
+select brand.id
+	from brand
+	right join product on brand.name=product.brand);
+
+update product,brand set product.brandId=brand.id
+    -> where product.brand=brand.name;
+
+==================================================================================
+
+alter table product drop primary key;
+
+alter table product add brandId int not null;
